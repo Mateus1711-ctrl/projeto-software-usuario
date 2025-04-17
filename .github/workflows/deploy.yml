@@ -54,6 +54,8 @@ jobs:
               -e PASS_DB=${{ secrets.PASS_DB }} \
               -e PATH_DB=${{ secrets.PATH_DB }} \
               -e NAME_DB=${{ secrets.NAME_DB }} \
+              -e REDIS_HOST=redis
+             -e REDIS_HOST=redis \
               --name usuario \
               --network rede \
               mateus1711/usuario-ci:${{ github.sha }}
