@@ -1,16 +1,16 @@
-name: Deploy
+name: Deploy - Usuário
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -31,7 +31,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push
+      - name: Build & Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -39,11 +39,11 @@ jobs:
           push: true
           tags: mateus1711/usuario-ci:${{ github.sha }}
 
-      - name: executing remote ssh commands using password
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST_TEST }}
-          username: "ubuntu"
+          username: ubuntu
           key: ${{ secrets.KEY_TEST }}
           port: 22
           script: |
@@ -55,5 +55,5 @@ jobs:
               -e PATH_DB=${{ secrets.PATH_DB }} \
               -e NAME_DB=${{ secrets.NAME_DB }} \
               --name usuario \
-              --network=rede \
+              --network rede \
               mateus1711/usuario-ci:${{ github.sha }}
